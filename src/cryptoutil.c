@@ -16,10 +16,10 @@ void cru_B64Encode(char* inBuf, char* outBuf, uint32_t len) {
     // Read bytes from inBuf and process in 24-bit blocks
     uint32_t wPos = 0;
     uint32_t block = 0;
-    for (uint8_t i = 0; i < len; i++) {
+    for (uint32_t i = 0; i < len; i++) {
         block |= ((uint32_t)inBuf[i]) << (8 * (2 - (i % 3))); 
         if (i % 3 == 2) {
-            for (int j = 0; j < 4; j++) {
+            for (uint8_t j = 0; j < 4; j++) {
                 uint8_t sextet = (block >> (6 * (3 - j))) & 0x3F;
                 outBuf[wPos] = b64dict[sextet];
                 wPos++;
