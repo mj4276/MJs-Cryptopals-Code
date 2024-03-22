@@ -3,38 +3,52 @@ cryptoutil.c - Utilities for use in the cryptopals challenges.
 */
 
 #include <stdio.h>
-#include "cryptoutils.h"
+#include <string.h>
+#include <stdint.h>
+#include "cryptoutil.h"
 
-char B64Char(char c);
-
-char B64Char(char c) {
-    #ifdef DEBUG
-    if (c < 0x3F) {printf("Warning: GetB64Char called with oversized input.");}
-    #endif
-    char dictionary[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-    return dictionary[c & 0x3F];
-}
-
-int cru_B64Encode(char* inBuf, char* outBuf, int len) {
-    char in[4]; //TODO: make this an array
-    int i;
-    for (i = 0; i < len - 4; i += 4) {
-        in[0] = inBuf[i] & 0x3F;
-        in[1] = i+1 < len ? ((inBuf[i] & 0xC0) >> 6) & ((inBuf[i+1] & 0x0F) << 2) : 0xFF;
-        in[2] = i+2 < len ? ((inBuf[i+1] & 0xF0) >> 4) & ((inBuf[i+2] & 0x02) << 4) : 0xFF;
-        in[3] = i+3 < len ? ((inBuf[i+3] & 0xFC) >> 2) : 0xFF;
-        for (int j = 0; j < 4; j++) {
-            outBuf[i+j] = in[j] == 0xFF ? '=' : B64Char(in[j]); // 0xFF (not a valid input sextet) implies padding
+void cru_B64Encode(char* inBuf, char* outBuf, int len) {
+    char b64dict[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    // Read bytes from inBuf and process in 24-bit blocks
+    uint32_t wPos = 0;
+    uint32_t block = 0;
+    for (uint8_t i = 0; i < len; i++) {
+        block |= ((uint32_t)inBuf[i]) << (8 * (2 - (i % 3))); 
+        if (i % 3 == 2) {
+            for (int j = 0; j < 4; j++) {
+                uint8_t sextet = (block >> (6 * (3 - j))) & 0x3F;
+                outBuf[wPos] = b64dict[sextet];
+                wPos++;
+            }
+            block = 0;
         }
     }
-    
+    // If applicable, process the last partial block, padding with '='
+    uint8_t remainder = len % 3;
+    if (remainder) {
+        uint8_t valid_sextets = remainder == 1 ? 2 : 3;
+        uint8_t j;
+        for (j = 0; j < valid_sextets; j++) {
+            uint8_t sextet = (block >> (6 * (3 - j))) & 0x3F;
+            outBuf[wPos] = b64dict[sextet];
+            wPos++;
+        }
+        for (; j < 4; j++) {
+            outBuf[wPos] = '=';
+            wPos++;
+        }
+    }
 }
+
 
 
 #ifdef DEBUG
 int main(int argc, char* argv[]) {
-    printf("Hello World!");
-    char in[] = "Hello World"
-    char out[len(in)] 
+    char in[] = "Hello World!\n";
+    int outlen = ((strlen(in)+3)*4)/3;
+    printf("In-len: %ld, Out-len: %d\n", strlen(in), outlen);
+    char out[outlen];
+    cru_B64Encode(in, out, strlen(in));
+    printf("In: %s\nOut: %s\n", in, out);
 }
 #endif //DEBUG
