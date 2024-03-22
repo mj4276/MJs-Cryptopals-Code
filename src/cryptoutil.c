@@ -7,7 +7,11 @@ cryptoutil.c - Utilities for use in the cryptopals challenges.
 #include <stdint.h>
 #include "cryptoutil.h"
 
-void cru_B64Encode(char* inBuf, char* outBuf, int len) {
+uint32_t cru_B64EncodedLength(uint32_t len) {
+    return ((((len - 1) / 3) + 1) * 12) / 3;
+}
+
+void cru_B64Encode(char* inBuf, char* outBuf, uint32_t len) {
     char b64dict[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     // Read bytes from inBuf and process in 24-bit blocks
     uint32_t wPos = 0;
@@ -38,6 +42,7 @@ void cru_B64Encode(char* inBuf, char* outBuf, int len) {
             wPos++;
         }
     }
+    outBuf[wPos] = '\0';
 }
 
 
@@ -45,9 +50,9 @@ void cru_B64Encode(char* inBuf, char* outBuf, int len) {
 #ifdef DEBUG
 int main(int argc, char* argv[]) {
     char in[] = "Hello World!\n";
-    int outlen = ((strlen(in)+3)*4)/3;
+    uint32_t outlen = cru_B64EncodedLength(strlen(in));
     printf("In-len: %ld, Out-len: %d\n", strlen(in), outlen);
-    char out[outlen];
+    char out[outlen + 1];
     cru_B64Encode(in, out, strlen(in));
     printf("In: %s\nOut: %s\n", in, out);
 }
