@@ -16,6 +16,11 @@ uint32_t cru_B64EncodedLength(uint32_t len);
  */
 void cru_B64Encode(uint8_t* inbuf, uint8_t* outbuf, uint32_t len);
 
+/* Decode 'len' bytes from the ascii hexadecimal in inbuf and
+ * write the raw data to outbuf. Invalid characters are decoded
+ * as 0. This function rounds 'len' down to the nearest multiple
+ * of two, so the output of strlen can be used as 'len' directly
+ */
 void cru_HexDecode(uint8_t *inbuf, uint8_t* outbuf, uint32_t len);
 
 #endif //CRYPTOUTIL_H

@@ -4,7 +4,7 @@ CFLAGS := -Wall -I$(REPO_ROOT)/src
 DEPDIR := .deps
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
 ifdef DEBUG
-    #TODO
+    CFLAGS += -DDEBUG
 endif
 
 vpath %.c $(REPO_ROOT)/src $(REPO_ROOT)/tests
