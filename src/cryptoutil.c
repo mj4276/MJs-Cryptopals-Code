@@ -11,7 +11,7 @@ uint32_t cru_B64EncodedLength(uint32_t len) {
     return ((((len - 1) / 3) + 1) * 12) / 3;
 }
 
-void cru_B64Encode(char* inBuf, char* outBuf, uint32_t len) {
+void cru_B64Encode(uint8_t* inBuf, uint8_t* outBuf, uint32_t len) {
     char b64dict[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     // Read bytes from inBuf and process in 24-bit blocks
     uint32_t wPos = 0;
