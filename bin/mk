@@ -4,5 +4,5 @@ REPO_ROOT=$(realpath $(dirname $0)/..)
 
 echo "REPO_ROOT ?= ${REPO_ROOT}" > Makefile
 
-cat $REPO_ROOT/mk/* >> Makefile
+cat $REPO_ROOT/mk/project.mk >> Makefile
 
