@@ -11,10 +11,11 @@
  */
 uint32_t cru_B64EncodedLength(uint32_t len);
 
-/* Encode 'len' bytes from inBuf to Base64 and write the result
- * to outBuf, including a null-termination.
+/* Encode 'len' bytes from inbuf to Base64 and write the result
+ * to outbuf, including a null-termination.
  */
-void cru_B64Encode(uint8_t* inBuf, uint8_t* outBuf, uint32_t len);
+void cru_B64Encode(uint8_t* inbuf, uint8_t* outbuf, uint32_t len);
 
+void cru_HexDecode(uint8_t *inbuf, uint8_t* outbuf, uint32_t len);
 
 #endif //CRYPTOUTIL_H
