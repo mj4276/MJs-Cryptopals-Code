@@ -11,6 +11,15 @@
  */
 uint32_t cru_B64EncodedLength(uint32_t len);
 
+/* Return the number of bytes required to store the raw
+ * decoded data from a Base64 encoded buffer of length
+ * 'len'. It is assumed that the buffer is properly padded.
+ * A length corresponding to incorrect padding is rounded
+ * down, which allows using strlen() directly as the input
+ * to this function.
+ */
+uint32_t cru_B64DecodedLength(uint32_t len);
+
 /* Encode 'len' bytes from inbuf to Base64 and write the result
  * to outbuf, including a null-termination.
  */

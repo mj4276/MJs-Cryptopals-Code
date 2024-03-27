@@ -11,8 +11,13 @@ uint32_t cru_B64EncodedLength(uint32_t len) {
     return ((((len - 1) / 3) + 1) * 12) / 3;
 }
 
+uint32_t cru_B64DecodedLength(uint32_t len) {
+    // Assume correct padding and that (len % 4 != 0) implies a null-termination
+    return (len / 4) * 3;
+}
+
 void cru_B64Encode(uint8_t* inbuf, uint8_t* outbuf, uint32_t len) {
-    char b64lut[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    const char b64lut[] =  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
     // Read bytes from inbuf and process in 24-bit blocks
     uint32_t w_pos = 0;
     uint32_t block = 0;
@@ -49,7 +54,7 @@ void cru_B64Encode(uint8_t* inbuf, uint8_t* outbuf, uint32_t len) {
 void cru_HexDecode(uint8_t *inbuf, uint8_t *outbuf, uint32_t len) {
     // I might have otherwise used sprintf(), but this is a low-level
     // library, and this should be faseter:
-    uint8_t hex_lut[256] = { \
+    const uint8_t hex_lut[256] = { \
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  \
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  \
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5,  \
