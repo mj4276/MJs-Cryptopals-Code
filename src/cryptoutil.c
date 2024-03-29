@@ -7,6 +7,8 @@ cryptoutil.c - Utilities for use in the cryptopals challenges.
 #include <stdint.h>
 #include "cryptoutil.h"
 
+static uint8_t HexCharToNibble(const uint8_t c);
+
 uint32_t cru_B64EncodedLength(uint32_t len) {
     return ((((len - 1) / 3) + 1) * 12) / 3;
 }
@@ -50,21 +52,15 @@ void cru_B64Encode(uint8_t* inbuf, uint8_t* outbuf, uint32_t len) {
     outbuf[w_pos] = '\0';
 }
 
-
-void cru_HexDecode(uint8_t *inbuf, uint8_t *outbuf, uint32_t len) {
+static uint8_t HexCharToNibble(const uint8_t c) {
     // I might have otherwise used sprintf(), but this is a low-level
     // library, and this should be faseter:
-    const uint8_t hex_lut[256] = { \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5,  \
-        6, 7, 8, 9, 0, 0, 0, 0, 0, 0, 0, 0xA, 0xB, 0xC, 0xD,   \
-        0xE, 0xF, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, \
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0xa, 0xb, 0xc, 0xd,   \
-        0xe, 0xf \
-    };
+    return c & 0x80 ? (c & 0x0F) + 10 : c & 0x0F;
+}
+
+void cru_HexDecode(uint8_t *inbuf, uint8_t *outbuf, uint32_t len) {
     for (uint32_t i = 0; i < ((len>>1)<<1); i += 2) { // len is rounded to the nearest multiple of 2
-        outbuf[i>>1] = (hex_lut[inbuf[i]] << 4) | hex_lut[inbuf[i+1]];
+        outbuf[i>>1] = (HexCharToNibble(inbuf[i]) << 4) | HexCharToNibble(inbuf[i+1]);
     }
 }
 
