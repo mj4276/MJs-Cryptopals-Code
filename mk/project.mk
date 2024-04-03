@@ -1,6 +1,6 @@
 
 CC = gcc
-CFLAGS := -Wall -I$(REPO_ROOT)/src -O3
+CFLAGS := -Wall -I$(REPO_ROOT)/src -O3 -g
 DEPDIR := .deps
 DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
 ifdef DEBUG
