@@ -55,7 +55,7 @@ void cru_B64Encode(uint8_t* inbuf, uint8_t* outbuf, uint32_t len) {
 static uint8_t HexCharToNibble(const uint8_t c) {
     // I might have otherwise used sprintf(), but this is a low-level
     // library, and this should be faseter:
-    return c & 0x80 ? (c & 0x0F) + 10 : c & 0x0F;
+    return c & 0x40 ? (c & 0x0F) + 9 : c & 0x0F;
 }
 
 void cru_HexDecode(uint8_t *inbuf, uint8_t *outbuf, uint32_t len) {
